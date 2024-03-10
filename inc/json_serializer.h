@@ -10,6 +10,17 @@
 
 #include "json-builder.h"
 
+const char J_CHAR[]   = "chr";
+const char J_UCHAR[]  = "uchr";
+const char J_INT[]    = "int";
+const char J_UINT[]   = "uint";
+const char J_LONG[]   = "long";
+const char J_ULONG[]  = "ulong";
+const char J_SHORT[]  = "shrt";
+const char J_USHORT[] = "ushrt";
+const char J_DOUBLE[] = "dble";
+const char J_STRING[] = "strg";
+
 typedef struct json_metadata_field
 {
   char *type;
@@ -54,7 +65,7 @@ json_metadata_field_t *find_metadata_field_by_type(const char *type,
  * Return: the pointer of the created metadata.
  * Note: memory will be allocated.
  *************************************************************/
-json_metadata_t *add_json_metadata(const char *name,  // data type name
+json_metadata_t *add_json_metadata(const char name[],  // data type name
                                    size_t size,       // size of the data type
                                    json_metadata_t *metadata);
 
@@ -71,7 +82,7 @@ void delete_json_metadata_field(json_metadata_field_t *metadata_field);
  * Note: memory will be allocated.
  *************************************************************/
 void add_json_metadata_field(json_metadata_t *metadata,
-                             char *type,
+                             const char type[],
                              char *name,
                              size_t size,
                              int num_elements,

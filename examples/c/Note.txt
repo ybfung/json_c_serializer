@@ -1,0 +1,7 @@
+To compile examples:
+
+1. cp ../../libjson_serializer.so ./
+2. gcc example_from_json.c -I../../inc/ -L../../ -ljson_serializer -o from_json
+3. gcc example_to_json.c -I../../inc/ -L../../ -ljson_serializer -o to_json
+
+

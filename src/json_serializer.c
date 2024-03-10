@@ -223,7 +223,7 @@ json_metadata_field_t * find_metadata_field_by_type( const char *type, json_meta
   RET(NULL);
 }
 
-json_metadata_t * add_json_metadata(const char *name, size_t size, json_metadata_t *metadata)
+json_metadata_t * add_json_metadata(const char name[], size_t size, json_metadata_t *metadata)
 {
   json_metadata_t *curr = metadata;
   json_metadata_t *tmp = NULL;
@@ -288,7 +288,7 @@ void delete_json_metadata_field(json_metadata_field_t *metadata_field)
 }
 
 void add_json_metadata_field(json_metadata_t *metadata,
-                             char *type,
+                             const char type[],
                              char *name,
                              size_t size,
                              int num_elements,
@@ -397,7 +397,7 @@ int serialize_metadata_field(json_value * parent_obj,
     for (i = 0; i < field->num_elements; ++i) {
       void * curr = (unsigned char *)start + data_size*i;
 
-      if (strcmp(field->type,"uchar") == 0)
+      if (strcmp(field->type,J_UCHAR) == 0)
       {
         json_int_t tmp  = 0;
         unsigned char *p = (unsigned char *) curr;
@@ -410,7 +410,7 @@ int serialize_metadata_field(json_value * parent_obj,
         }
 
         tmp = *p;
-        DEBUG_2(LVL_INFO,"field uchar detected, size: %d, data: 0x%x",
+        DEBUG_2(LVL_INFO,"field J_UCHAR detected, size: %d, data: 0x%x",
                 data_size,(unsigned char)tmp);
 
         json_value * int_obj = json_integer_new (tmp);
@@ -420,8 +420,10 @@ int serialize_metadata_field(json_value * parent_obj,
         else {
           json_object_push( parent_obj,field->name,int_obj);
         }
+        break;
       }
-      else if (strcmp(field->type,"char") == 0)
+      //else if (strcmp(field->type,J_CHAR) == 0)
+      else if (strcmp(field->type,J_CHAR) == 0)
       {
         json_int_t tmp  = 0;
         char *p = (char *) curr;
@@ -445,7 +447,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,int_obj);
         }
       }
-      else if( strcmp(field->type,"short") == 0)
+      else if( strcmp(field->type,J_SHORT) == 0)
       {
         json_int_t tmp  = 0;
         short *p = (short *) curr;
@@ -468,7 +470,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,int_obj);
         }
       }
-      else if( strcmp(field->type,"ushort") == 0)
+      else if( strcmp(field->type,J_USHORT) == 0)
       {
         json_int_t tmp  = 0;
         unsigned short *p = (unsigned short *) curr;
@@ -491,7 +493,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,int_obj);
         }
       }
-      else if( strcmp(field->type,"int") == 0)
+      else if( strcmp(field->type,J_INT) == 0)
       {
         json_int_t tmp  = 0;
         int *p = (int *) curr;
@@ -516,7 +518,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,int_obj);
         }
       }
-      else if( strcmp(field->type,"unsigned int") == 0)
+      else if( strcmp(field->type,J_UINT) == 0)
       {
         json_int_t tmp  = 0;
         unsigned int *p = (unsigned int *) curr;
@@ -541,7 +543,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,uint_obj);
         }
       }
-      else if (strcmp(field->type,"long") == 0)
+      else if (strcmp(field->type,J_LONG) == 0)
       {
         json_int_t tmp  = 0;
         long *p = (long *) curr;
@@ -564,7 +566,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,int_obj);
         }
       }
-      else if (strcmp(field->type,"unsigned long") == 0)
+      else if (strcmp(field->type,J_ULONG) == 0)
       {
         json_int_t tmp  = 0;
         unsigned long *p = (unsigned long *) curr;
@@ -587,7 +589,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,uint_obj);
         }
       }
-      else if( strcmp(field->type,"double") == 0)
+      else if( strcmp(field->type,J_DOUBLE) == 0)
       {
         double tmp  = 0;
 
@@ -608,7 +610,7 @@ int serialize_metadata_field(json_value * parent_obj,
           json_object_push( parent_obj,field->name,dbl_obj);
         }
       }
-      else if( strcmp(field->type,"string") == 0)
+      else if( strcmp(field->type,J_STRING) == 0)
       {
         int len = data_size;
         char * tmp = (char * )malloc(len+1);
@@ -721,7 +723,7 @@ int compare_metadata_field( json_metadata_field_t * field,
       void * curr_a = (unsigned char *)start_a + data_size*i;
       void * curr_b = (unsigned char *)start_b + data_size*i;
 
-      if (strcmp(field->type,"uchar") == 0)
+      if (strcmp(field->type,J_UCHAR) == 0)
       {
         unsigned char *a = (unsigned char *) curr_a;
         unsigned char *b = (unsigned char *) curr_b;
@@ -740,7 +742,7 @@ int compare_metadata_field( json_metadata_field_t * field,
             RET(P_FAIL);
         }
       }
-      else if (strcmp(field->type,"char") == 0)
+      else if (strcmp(field->type,J_CHAR) == 0)
       {
         char *a = (char *) curr_a;
         char *b = (char *) curr_b;
@@ -759,7 +761,7 @@ int compare_metadata_field( json_metadata_field_t * field,
             RET(P_FAIL);
         }
       }
-      else if( strcmp(field->type,"short") == 0)
+      else if( strcmp(field->type,J_SHORT) == 0)
       {
         short *a = (short *) curr_a;
         short *b = (short *) curr_b;
@@ -779,7 +781,7 @@ int compare_metadata_field( json_metadata_field_t * field,
            }
            */
       }
-      else if( strcmp(field->type,"ushort") == 0)
+      else if( strcmp(field->type,J_USHORT) == 0)
       {
         unsigned short *a = (unsigned short *) curr_a;
         unsigned short *b = (unsigned short *) curr_b;
@@ -799,7 +801,7 @@ int compare_metadata_field( json_metadata_field_t * field,
            }
            */
       }
-      else if( strcmp(field->type,"int") == 0)
+      else if( strcmp(field->type,J_INT) == 0)
       {
         int *a = (int *) curr_a;
         int *b = (int *) curr_b;
@@ -819,7 +821,7 @@ int compare_metadata_field( json_metadata_field_t * field,
            }
            */
       }
-      else if( strcmp(field->type,"unsigned int") == 0)
+      else if( strcmp(field->type,J_UINT) == 0)
       {
         unsigned int *a = (unsigned int *) curr_a;
         unsigned int *b = (unsigned int *) curr_b;
@@ -839,7 +841,7 @@ int compare_metadata_field( json_metadata_field_t * field,
            }
            */
       }
-      else if (strcmp(field->type,"long") == 0)
+      else if (strcmp(field->type,J_LONG) == 0)
       {
         long *a = (long *) curr_a;
         long *b = (long *) curr_b;
@@ -856,7 +858,7 @@ int compare_metadata_field( json_metadata_field_t * field,
         //  continue;
         // }
       }
-      else if (strcmp(field->type,"unsigned long") == 0)
+      else if (strcmp(field->type,J_ULONG) == 0)
       {
         unsigned long *a = (unsigned long *) curr_a;
         unsigned long *b = (unsigned long *) curr_b;
@@ -867,7 +869,7 @@ int compare_metadata_field( json_metadata_field_t * field,
             RET(P_FAIL);
         }
       }
-      else if( strcmp(field->type,"double") == 0)
+      else if( strcmp(field->type,J_DOUBLE) == 0)
       {
         double *a = (double *) curr_a;
         double *b = (double *) curr_b;
@@ -878,7 +880,7 @@ int compare_metadata_field( json_metadata_field_t * field,
             RET(P_FAIL);
         }
       }
-      else if( strcmp(field->type,"string") == 0)
+      else if( strcmp(field->type,J_STRING) == 0)
       {
         char *a = (char *) curr_a;
         char *b = (char *) curr_b;
@@ -972,8 +974,8 @@ void display_metadata_field(json_metadata_t * metadata,
     {
       void * curr = (unsigned char *)start + data_size*i;
 
-      if ((strcmp(field->type,"uchar") == 0) ||
-          (strcmp(field->type,"char") == 0) )
+      if ((strcmp(field->type,J_UCHAR) == 0) ||
+          (strcmp(field->type,J_CHAR) == 0) )
       {
         unsigned char *data = (unsigned char *) curr;
         if (is_array) {
@@ -983,7 +985,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [0x%x]", field->name, *data);
         }
       }
-      else if( strcmp(field->type,"short") == 0)
+      else if( strcmp(field->type,J_SHORT) == 0)
       {
         short *data = (short *) curr;
         if (is_array) {
@@ -993,7 +995,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [%d]", field->name, *data);
         }
       }
-      else if( strcmp(field->type,"ushort") == 0)
+      else if( strcmp(field->type,J_USHORT) == 0)
       {
         unsigned short *data = (unsigned short *) curr;
         if (is_array) {
@@ -1003,7 +1005,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [%u]", field->name, *data);
         }
       }
-      else if( strcmp(field->type,"int") == 0)
+      else if( strcmp(field->type,J_INT) == 0)
       {
         int *data = (int *) curr;
         if (is_array) {
@@ -1013,7 +1015,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [%d]", field->name, *data);
         }
       }
-      else if( strcmp(field->type,"unsigned int") == 0)
+      else if( strcmp(field->type,J_UINT) == 0)
       {
         unsigned int *data = (unsigned int *) curr;
         if (is_array) {
@@ -1023,7 +1025,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [%u]", field->name, *data);
         }
       }
-      else if (strcmp(field->type,"long") == 0)
+      else if (strcmp(field->type,J_LONG) == 0)
       {
         long *data = (long *) curr;
         if (is_array) {
@@ -1033,7 +1035,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [%ld]", field->name, *data);
         }
       }
-      else if (strcmp(field->type,"unsigned long") == 0)
+      else if (strcmp(field->type,J_ULONG) == 0)
       {
         unsigned long *data = (unsigned long *) curr;
         if (is_array) {
@@ -1043,7 +1045,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [%lu]", field->name, *data);
         }
       }
-      else if( strcmp(field->type,"double") == 0)
+      else if( strcmp(field->type,J_DOUBLE) == 0)
       {
         double *data = (double *) curr;
         if (is_array) {
@@ -1053,7 +1055,7 @@ void display_metadata_field(json_metadata_t * metadata,
           DISPLAY_2( "%s [%f]", field->name, *data);
         }
       }
-      else if( strcmp(field->type,"string") == 0)
+      else if( strcmp(field->type,J_STRING) == 0)
       {
         char *data = (char *) curr;
         int len = data_size;
@@ -1308,7 +1310,7 @@ int deserialize_field(char* json_obj_name,
 
       DEBUG_2(LVL_DBG,"index [%d], size : %d",i,field_sz);
 
-      if( strcmp(field->type,"short") == 0) {
+      if( strcmp(field->type,J_SHORT) == 0) {
          short data = 0;
          if (is_array==0) {
             data = (short)json_obj->u.integer;
@@ -1330,7 +1332,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(short));
          }
       }
-      else if( strcmp(field->type,"ushort") == 0) {
+      else if( strcmp(field->type,J_USHORT) == 0) {
          unsigned short data = 0;
          if (is_array==0) {
             data = (unsigned short) json_obj->u.integer;
@@ -1353,7 +1355,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(unsigned short));
          }
       }
-      else if( strcmp(field->type,"int") == 0) {
+      else if( strcmp(field->type,J_INT) == 0) {
          long data = 0;
          if (is_array==0) {
             data = (int) json_obj->u.integer;
@@ -1376,7 +1378,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(int));
          }
       }
-      else if( strcmp(field->type,"unsigned int") == 0) {
+      else if( strcmp(field->type,J_UINT) == 0) {
          unsigned int data = 0;
          if (is_array==0) {
             data = (unsigned int) json_obj->u.integer;
@@ -1399,7 +1401,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(unsigned int));
          }
       }
-      else if( strcmp(field->type,"long") == 0) {
+      else if( strcmp(field->type,J_LONG) == 0) {
          long data = 0;
          if (is_array==0) {
             data = (long) json_obj->u.integer;
@@ -1422,7 +1424,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(long));
          }
       }
-      else if( strcmp(field->type,"unsigned long") == 0) {
+      else if( strcmp(field->type,J_ULONG) == 0) {
          unsigned long data = 0;
          if (is_array==0) {
             data = (unsigned long) json_obj->u.integer;
@@ -1445,7 +1447,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(unsigned long));
          }
       }
-      else if( strcmp(field->type,"double") == 0) {
+      else if( strcmp(field->type,J_DOUBLE) == 0) {
          double data = .0;
          if (is_array==0) {
             data = (double) json_obj->u.dbl;
@@ -1468,7 +1470,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(double));
          }
       }
-      else if( strcmp(field->type,"uchar") == 0) {
+      else if( strcmp(field->type,J_UCHAR) == 0) {
          unsigned char data = 0;
          if (is_array==0) {
             data = (unsigned char) json_obj->u.integer;
@@ -1491,7 +1493,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(unsigned char));
          }
       }
-      else if( strcmp(field->type,"char") == 0) {
+      else if( strcmp(field->type,J_CHAR) == 0) {
          char data = 0;
          if (is_array==0) {
             data = (char) json_obj->u.integer;
@@ -1514,7 +1516,7 @@ int deserialize_field(char* json_obj_name,
                      json_obj_name,field_name,field_sz,sizeof(char));
          }
       }
-      else if( strcmp(field->type,"string") == 0) {
+      else if( strcmp(field->type,J_STRING) == 0) {
          char * data = NULL;
          int data_len = 0;
          int obj_type =0;
