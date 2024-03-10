@@ -2,7 +2,7 @@
 A powerful yet handy JSON serializer for C/C++. It directly serializes from C/C++ data structure to JSON string or deserializes from JSON string into C/C++ data structure.
 
 Please clone the following repository:<br>
-https://github.com/json-parser/json-builder.git<br>
+https://github.com/json-parser/json-builder.git
 Then, copy the json-builder.h to inc/json-builder.h and json-builder.c to src/json-builder.c<br>
 
 Please clone the following repository:<br> 
